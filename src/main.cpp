@@ -25,8 +25,16 @@ void setup() {
 
   // Start the I2C connection to the display.
   // Two 2k ohm pullup-resistors are used for I2C here
-  // because Teensy 4.1 has 3.3V logic levels.  
-  display.begin(0x70, &Wire);
+  // because Teensy 4.1 has 3.3V logic levels.
+  // If returns false, there was an error.  
+  if (!display.begin(0x70, &Wire)) {
+    SerialUSB.println("Could not open i2c!");
+    while(1) {
+      delay(10);
+    }
+  }
+
+  // Refresh
   display.println(0);
   display.writeDisplay();
 }
@@ -59,7 +67,7 @@ void loop() {
   }
   
   // Write status.
-  display.println(errors, DEC);
+  display.println(errors, HEX);
   // display the new status
   display.writeDisplay(); 
 
